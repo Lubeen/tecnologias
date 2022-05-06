@@ -1,0 +1,42 @@
+#Docker-compose é uma ferramenta que consegue apartir de uma especificação, subir os containers com essas especificações
+#Docker-compose é um pacote de ferramentas que permite criar e gerenciar containers
+#isso facilita a criação de containers e aumenta a produtividade do desenvolvedor
+
+
+version: '3'
+
+services:
+  web:#nome do serviço
+    image: nginx:1.13.6-alpine
+    ports:
+      - "8080:80"
+    volumes:
+      - ./html:/usr/share/nginx/html #compatilhar a pasta do computador e a pasta do container
+
+"""
+ou podemos fazer assim
+version: '3'
+
+  services: # tudo construido dentro de services, ou seja web e mysql estao conectados
+    web:
+      build: . #pega a imagem baseado no docerfile que ja tenho no mesmo diretorio
+      ports:
+        - "8080:80"
+      volumes:
+        - ./html:/usr/share/nginx/html
+"""
+
+    mysql:
+      image: mysql:5.7
+      environment:
+        MYSQL_ROOT_PASSWORD: root
+        MYSQL_DATABASE: mydb
+      ports:
+        - "3306:3306"
+      volumes:
+        - ./mysql:/var/lib/mysql
+      networks:#para participar de uma conexao separada da principal
+        - backend
+#É preciso criar um volume para o mysql, caso caso contrario quando o processo for morto, irá perder tudo do db 
+dsn: mysql://root:root@localhost:3306/mydb
+#DOCKER COMPOSE UP # para subir esse arquivo                                                            
